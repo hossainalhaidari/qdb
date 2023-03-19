@@ -3,6 +3,7 @@ package main
 import (
 	"io"
 	"net/http"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 )
@@ -39,6 +40,9 @@ func setRoute(c echo.Context) error {
 
 	err = set(key, string(val))
 	if err != nil {
+		if strings.HasPrefix(err.Error(), "UNIQUE constraint failed") {
+			return c.NoContent(http.StatusConflict)
+		}
 		return c.NoContent(http.StatusInternalServerError)
 	}
 
@@ -69,6 +73,9 @@ func addUserRoute(c echo.Context) error {
 
 	err = addUser(key, string(val))
 	if err != nil {
+		if strings.HasPrefix(err.Error(), "UNIQUE constraint failed") {
+			return c.NoContent(http.StatusConflict)
+		}
 		return c.NoContent(http.StatusInternalServerError)
 	}
 
