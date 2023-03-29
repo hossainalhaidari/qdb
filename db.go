@@ -10,6 +10,7 @@ import (
 )
 
 const dbPath = "data.db"
+const adminUser = "admin"
 
 var database *sql.DB
 
@@ -134,6 +135,10 @@ func addUser(username string, password string) error {
 }
 
 func delUser(username string) error {
+	if username == adminUser {
+		return errors.New("forbidden")
+	}
+
 	db, err := getDb()
 	if err != nil {
 		return err
@@ -148,11 +153,11 @@ func delUser(username string) error {
 }
 
 func initAdminUser() string {
-	exists := checkUser("admin")
+	exists := checkUser(adminUser)
 
 	if !exists {
 		password := uniuri.New()
-		addUser("admin", password)
+		addUser(adminUser, password)
 		return password
 	}
 

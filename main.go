@@ -34,5 +34,5 @@ func main() {
 	e.POST("/users/:key", addUserRoute)
 	e.DELETE("/users/:key", delUserRoute)
 
-	e.Logger.Fatal(e.Start(":1323"))
+	e.Logger.Fatal(e.Start(":3000"))
 }

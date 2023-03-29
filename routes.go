@@ -87,6 +87,10 @@ func delUserRoute(c echo.Context) error {
 
 	err := delUser(key)
 	if err != nil {
+		if err.Error() == "forbidden" {
+			return c.NoContent(http.StatusForbidden)
+		}
+
 		return c.NoContent(http.StatusInternalServerError)
 	}
 

@@ -1,13 +1,10 @@
-FROM golang:latest
+FROM golang:latest AS build
+WORKDIR /src
+COPY *.go go.* /src
+RUN CGO_ENABLED=1 go build -o /bin/qdb
 
+FROM scratch
 WORKDIR /app
-
-COPY go.mod go.sum ./
-RUN go mod download && go mod verify
-
-ENV CGO_ENABLED=1
-COPY . .
-RUN go build -v -o /app
-
-EXPOSE 1323
-CMD ["./qdb"]
+COPY --from=build /bin/qdb ./qdb
+EXPOSE 3000
+ENTRYPOINT ["/app/qdb"]
